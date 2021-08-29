@@ -13,11 +13,8 @@ refs.input.addEventListener('input', _.debounce(onInputSearch, 500));
 
 function onInputSearch(e) {
   e.preventDefault();
-
   const searchQuery = e.target.value;
-
-  API.fetchCountries(searchQuery).then(renderCardCountry).catch(onFetchError);
-
+  API.fetchCountries(searchQuery).then(renderCardCountry).catch(showCatchError);
   resetDOM();
 }
 
@@ -27,20 +24,19 @@ function resetDOM() {
 
 function renderCardCountry(arr) {
   const length = arr.length;
-  // console.log(`Длина массива ${length}`);
-  if (length === 1) {
-    // console.log('Равно 1 - выводим карточку');
-    refs.card.innerHTML = cardOneCountry(arr);
-  } else {
-    if (length > 10) {
-      showError(length);
-    } else {
-      // console.log('Больше 1 и меньше 10 - выводим список');
-      refs.card.innerHTML = cardCountries(arr);
-    }
+  if (length > 10) {
+    showError(length);
+    return;
   }
-}
+  if (length === 1) {
+    refs.card.innerHTML = cardOneCountry(arr);
+    return;
+  }
+  refs.card.innerHTML = cardCountries(arr);
 
-function onFetchError(searchQuery) {
-  showCatchError(searchQuery);
+  // if (length > 1 && length < 11) {
+  //   refs.card.innerHTML = cardCountries(arr);
+  //   return;
+  // }
+  // refs.card.innerHTML = cardOneCountry(arr);
 }
